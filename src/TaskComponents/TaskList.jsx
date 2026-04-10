@@ -1,16 +1,16 @@
 import React from "react";
 import { FaStar } from "react-icons/fa";
-const TaskList = ({ tasks }) => {
+const TaskList = ({ tasks, onEdit, onDelete }) => {
   return (
     <div className="overflow-x-auto">
       <table className="w-full table-fixed border-separate border-spacing-0">
         <colgroup>
-          <col className="w-[48px]" />
-          <col className="w-[220px] md:w-[260px]" />
+          <col className="w-12" />
+          <col className="w-55 md:w-65" />
           <col />
-          <col className="w-[220px] md:w-[280px]" />
-          <col className="w-[120px]" />
-          <col className="w-[140px]" />
+          <col className="w-55 md:w-70" />
+          <col className="w-30" />
+          <col className="w-35" />
         </colgroup>
         <thead>
           <tr className="[&>th]:px-4 [&>th]:pb-6 [&>th]:text-left [&>th]:text-sm [&>th]:font-semibold [&>th]:capitalize">
@@ -29,7 +29,11 @@ const TaskList = ({ tasks }) => {
               className="border-b border-[#2E3443] [&>td]:px-4 [&>td]:py-4 [&>td]:align-top"
             >
               <td>
-               {task.isFavourite ? <FaStar color="yellow" /> : <FaStar color="gray" />}
+                {task.isFavourite ? (
+                  <FaStar color="yellow" />
+                ) : (
+                  <FaStar color="gray" />
+                )}
               </td>
               <td className="font-medium text-[#F4F5F6]">{task.title}</td>
               <td>
@@ -51,8 +55,16 @@ const TaskList = ({ tasks }) => {
               <td>{task.priority}</td>
               <td>
                 <div className="flex items-center gap-3">
-                  <button className="text-red-500">Delete</button>
-                  <button className="text-blue-500">Edit</button>
+                  <button className="text-red-500"
+                  onClick={() => onDelete(task.id)}
+                  >
+                     Delete
+                  </button>
+                  <button className="text-blue-500"
+                  onClick={() => onEdit(task)}
+                  >
+                     Edit
+                  </button>
                 </div>
               </td>
             </tr>

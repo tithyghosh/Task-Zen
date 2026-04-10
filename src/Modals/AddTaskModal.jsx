@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 
-const AddTaskModal = ({ onSave }) => {
-   const [task, setTask] = useState({
+const AddTaskModal = ({ onSave, taskToUpdate, onClose }) => {
+   const [task, setTask] = useState( taskToUpdate || {
       id: crypto.randomUUID(),
       title: '',
       description: '',
       tags: [],
       priority: '', 
       isFavourite: false 
-   })
+})
+
+const [isAdd, setIsAdd] = useState(Object.is(taskToUpdate, null))
 
    const handleChange = (event) =>{
       const name = event.target.name;
@@ -21,17 +23,31 @@ const AddTaskModal = ({ onSave }) => {
          [name]: value
       });
    }
+
   return (
    <>
    <div className='fixed inset-0 z-40 bg-black/70'></div>
    <form
+      onSubmit={(event) => {
+         event.preventDefault();
+         onSave(task, isAdd);
+      }}
       className="fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-xl border border-[#FEFBFB]/20 bg-[#191D26] p-6 shadow-2xl max-md:px-4 lg:p-8"
     >
-      <h2
-        className="mb-7 text-center text-2xl font-bold text-white lg:mb-8 lg:text-[28px]"
-      >
-        Add New Task
-      </h2>
+      <div className="mb-7 flex items-center justify-between lg:mb-8">
+        <h2
+          className="text-2xl font-bold text-white lg:text-[28px]"
+        >
+          {isAdd ? 'Add New Task' : 'Edit Task'}
+        </h2>
+        <button
+          type="button"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-xl leading-none text-slate-300 transition hover:border-white/25 hover:text-white"
+          onClick={onClose}
+        >
+          ×
+        </button>
+      </div>
 
     
       <div className="space-y-6 text-white lg:space-y-7">
@@ -51,7 +67,7 @@ const AddTaskModal = ({ onSave }) => {
         <div className="space-y-2 lg:space-y-3">
           <label htmlFor="description">Description</label>
           <textarea
-            className="block min-h-[110px] w-full rounded-md border border-transparent bg-[#2D323F] px-3 py-2.5 outline-none focus:border-blue-500 lg:min-h-[130px]"
+            className="block min-h-27.5 w-full rounded-md border border-transparent bg-[#2D323F] px-3 py-2.5 outline-none focus:border-blue-500 lg:min-h-32.5"
             type="text"
             name="description"
             id="description" 
@@ -96,14 +112,14 @@ const AddTaskModal = ({ onSave }) => {
         </div>
       </div>
       
-      <div className="mt-10 flex justify-center lg:mt-12">
+      <div className="mt-10 flex justify-center lg:mt-12 gap-3">
         <button
           type="submit"
           className="rounded bg-blue-600 px-4 py-2 text-white transition-all hover:opacity-80"
-          onClick={() => onSave(task)}
         >
-          Create new Task
+          {isAdd ? 'Create new Task' : 'Save Changes'}
         </button>
+        
       </div>
     </form>
     </>
