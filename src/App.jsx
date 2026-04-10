@@ -1,9 +1,12 @@
 import React from 'react'
+import Header from './Components/Header'
+import Footer from './Components/Footer'
 
 const App = () => {
   return (
     <>
-     <p>Welcome to tasker</p> 
+     <Header/>
+     <Footer/>
     </>
   )
 }
