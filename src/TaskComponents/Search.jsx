@@ -1,6 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-const Search = () => {
+const Search = ({onSearch}) => {
+	const [searchTerm, setSearchTerm] = useState('');
+	const handleClick = (event) =>{
+		event.preventDefault();
+		onSearch(searchTerm);
+	}
   return (
     <div className="p-2 flex justify-end">
 			<form>
@@ -8,8 +13,13 @@ const Search = () => {
 					<div className="relative overflow-hidden rounded-lg text-gray-50 md:min-w-[380px] lg:min-w-[440px]">
 						<input type="search" id="search-dropdown"
 							className="z-20 block w-full bg-gray-800 px-4 py-2 pr-10 focus:outline-none" placeholder="Search Task"
-							required />
-						<button type="submit" className="absolute right-2 top-0 h-full rounded-e-lg text-white md:right-4">
+							required 
+							value={searchTerm}
+							onChange={() => setSearchTerm(event.target.value)}
+							/>
+						<button type="submit" className="absolute right-2 top-0 h-full rounded-e-lg text-white md:right-4"
+						onClick={handleClick}
+						>
 							<svg className="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
 								viewBox="0 0 20 20">
 								<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

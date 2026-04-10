@@ -58,19 +58,33 @@ const TaskBoard = () => {
 		tasks.length = 0;
 		setTasks([...tasks]);
 	}
+
+	const handleFavourite = (taskId) =>{
+		const taskIndex = tasks.findIndex(task => task.id === taskId);
+		const newTask = [...tasks];
+		newTask[taskIndex].isFavourite = !newTask[taskIndex].isFavourite;
+		setTasks(newTask)
+	}
+
+	const handleSearch = (searchTerm) =>{
+		const filtered = tasks.filter((task) =>
+		task.title.toLowerCase().includes(searchTerm.toLowerCase())
+		);
+		setTasks([...filtered]);
+	}
   return (
     <section className="mb-20" id="tasks">
 		{showAddModal && <AddTaskModal onSave={handleAddTask} taskToUpdate={taskToUpdate} onClose={handleCloseModal} />}
 		<div className="container">
 			{/* Search Box starts */}
-         <Search/>
+         <Search onSearch={handleSearch}/>
 
          {/* Task Bar */}
 			<div className="border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-20 md:py-10">
 				<TaskAction onAddClick={handleOpenAddModal}
 				onDeleteAllClick={handleDeleteAllClick}
 				/>
-				<TaskList tasks={tasks} onEdit={handleEditTask} onDelete={handleDeleteTask} />
+				<TaskList tasks={tasks} onEdit={handleEditTask} onDelete={handleDeleteTask} onFav={handleFavourite}/>
 			</div>
 		</div>
 	</section>
