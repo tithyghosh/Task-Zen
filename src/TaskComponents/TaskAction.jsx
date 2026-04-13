@@ -1,22 +1,37 @@
-import React from 'react'
-
-const TaskAction = ( {onAddClick, onDeleteAllClick} ) => {
+import React from 'react';
+import { FiPlus, FiTrash2 } from 'react-icons/fi';
+const TaskAction = ( {onAddClick, onDeleteAllClick, totalCount, hasTasks} ) => {
   return (
-      <div className="mb-14 items-center justify-between sm:flex">
-					<h2 className="text-2xl font-semibold max-sm:mb-4">Your Tasks</h2>
-					<div className="flex items-center space-x-5">
-						<button className="rounded-md bg-blue-500 px-3.5 py-2.5 text-sm font-semibold"
-						onClick={onAddClick}
-						>
-							Add Task
-						</button>
-						<button className="rounded-md bg-red-500 px-3.5 py-2.5 text-sm font-semibold"
-						onClick={onDeleteAllClick}
-					>
-							Delete All
-						</button>
-					</div>
-				</div>
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h2 className="text-xl font-bold text-white">Your Tasks</h2>
+        {hasTasks && (
+          <p className="mt-0.5 text-xs text-slate-500">
+            {totalCount} task{totalCount !== 1 ? 's' : ''}
+          </p>
+        )}
+      </div>
+ 
+      <div className="flex items-center gap-2">
+        <button
+          onClick={onAddClick}
+          className="flex items-center gap-1.5 rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-black transition hover:bg-amber-400 active:scale-95"
+        >
+          <FiPlus size={15} strokeWidth={2.5} />
+          Add Task
+        </button>
+ 
+        {hasTasks && (
+          <button
+            onClick={onDeleteAllClick}
+            className="flex items-center gap-1.5 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-400 transition hover:bg-red-500/20 active:scale-95"
+          >
+            <FiTrash2 size={13} />
+            Delete All
+          </button>
+        )}
+      </div>
+    </div>
   )
 }
 

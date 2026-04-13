@@ -1,129 +1,214 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import PriorityBadge from '../Components/PriorityBadge';
+import { getPriority, PRIORITY_CONFIG } from '../utilities/PriorityConfig';
 
 const AddTaskModal = ({ onSave, taskToUpdate, onClose }) => {
-   const [task, setTask] = useState( taskToUpdate || {
+  const [task, setTask] = useState(
+    taskToUpdate || {
       id: crypto.randomUUID(),
       title: '',
       description: '',
       tags: [],
-      priority: '', 
-      isFavourite: false 
-})
+      priority: '',
+      dueDate: '',
+      isCompleted: false,
+      isFavourite: false,
+    }
+  );
 
-const [isAdd, setIsAdd] = useState(Object.is(taskToUpdate, null))
+  const isAdd = taskToUpdate === null;
 
-   const handleChange = (event) =>{
-      const name = event.target.name;
-      let value = event.target.value;
-      if(name === 'tags') {
-         value = value.split(",");
-      }
-      setTask({
-         ...task,
-         [name]: value
-      });
-   }
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setTask((prev) => ({
+      ...prev,
+      [name]: name === 'tags'
+        ? value.split(',').map((t) => t.trim())
+        : value,
+    }));
+  };
+
+  const priorityConfig = getPriority(task.priority);
+  const tagsValue = Array.isArray(task.tags) ? task.tags.join(', ') : task.tags;
 
   return (
-   <>
-   <div className='fixed inset-0 z-40 bg-black/70'></div>
-   <form
-      onSubmit={(event) => {
-         event.preventDefault();
-         onSave(task, isAdd);
-      }}
-      className="fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-xl border border-[#FEFBFB]/20 bg-[#191D26] p-6 shadow-2xl max-md:px-4 lg:p-8"
-    >
-      <div className="mb-7 flex items-center justify-between lg:mb-8">
-        <h2
-          className="text-2xl font-bold text-white lg:text-[28px]"
-        >
-          {isAdd ? 'Add New Task' : 'Edit Task'}
-        </h2>
-        <button
-          type="button"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-xl leading-none text-slate-300 transition hover:border-white/25 hover:text-white"
-          onClick={onClose}
-        >
-          ×
-        </button>
-      </div>
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
+        onClick={onClose}
+      />
 
-    
-      <div className="space-y-6 text-white lg:space-y-7">
-     
-        <div className="space-y-2 lg:space-y-3">
-          <label htmlFor="title">Title</label>
-          <input
-            className="block w-full rounded-md border border-transparent bg-[#2D323F] px-3 py-2.5 outline-none focus:border-blue-500"
-            type="text"
-            name="title"
-            id="title" value={task.title}
-            required
-            onChange={handleChange}
-          />
-        </div>
-        
-        <div className="space-y-2 lg:space-y-3">
-          <label htmlFor="description">Description</label>
-          <textarea
-            className="block min-h-27.5 w-full rounded-md border border-transparent bg-[#2D323F] px-3 py-2.5 outline-none focus:border-blue-500 lg:min-h-32.5"
-            type="text"
-            name="description"
-            id="description" 
-            value={task.description}
-            required
-            onChange={handleChange}
-          ></textarea>
-        </div>
-        <div
-          className="grid-cols-2 gap-x-4 max-md:space-y-6 md:grid lg:gap-x-8"
-        >
-          
-          <div className="space-y-2 lg:space-y-3">
-            <label htmlFor="tags">Tags</label>
-            <input
-              className="block w-full rounded-md border border-transparent bg-[#2D323F] px-3 py-2.5 outline-none focus:border-blue-500"
-              type="text"
-              name="tags"
-              id="tags"
-              required
-              value={task.tags}
-              onChange={handleChange}
-            />
-          </div>
-          
-          <div className="space-y-2 lg:space-y-3">
-            <label htmlFor="priority">Priority</label>
-            <select
-              className="block w-full cursor-pointer rounded-md border border-transparent bg-[#2D323F] px-3 py-2.5 outline-none focus:border-blue-500"
-              name="priority"
-              id="priority"
-              required
-              value={task.priority}
-              onChange={handleChange}
+      {/* Modal */}
+      <div className="fixed inset-0 z-50 overflow-y-auto px-4 py-4 sm:px-6 sm:py-8">
+        <div className="flex min-h-full items-end justify-center sm:items-center">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSave(task, isAdd);
+            }}
+            className="flex max-h-[calc(100dvh-2rem)] w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#191D26] shadow-2xl sm:max-h-[calc(100dvh-4rem)]"
+            role="dialog"
+            aria-modal="true"
+          >
+            {/* Header */}
+            <div className="flex items-start justify-between gap-4 border-b border-white/8 px-4 py-4 sm:px-6 sm:py-5">
+              <div className="min-w-0">
+                <h2 className="text-base font-bold text-white sm:text-lg">
+                  {isAdd ? '✦ New Task' : 'Edit Task'}
+                </h2>
+                <p className="mt-0.5 text-xs text-slate-500">
+                  {isAdd ? 'Fill in the details below' : 'Update your task'}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 text-slate-400 transition-colors hover:border-white/25 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="flex-1 space-y-4 overflow-y-auto px-4 py-5 sm:space-y-5 sm:px-6 sm:py-6">
+
+              {/* Title */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium uppercase tracking-wider text-slate-400">
+                  Title <span className="text-red-400">*</span>
+                </label>
+                <input
+                  className="block w-full rounded-lg border border-white/8 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition-all focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20"
+                  type="text"
+                  name="title"
+                  placeholder="What needs to be done?"
+                  value={task.title}
+                  required
+                  onChange={handleChange}
+                />
+              </div>
+
+              {/* Description */}
+              <div className="space-y-1.5">
+                <div className="flex justify-between gap-3">
+                  <label className="text-xs font-medium uppercase tracking-wider text-slate-400">
+                    Description
+                  </label>
+                  <span className="text-xs text-slate-600">
+                    {task.description.length}/300
+                  </span>
+                </div>
+                <textarea
+                  className="block min-h-[90px] w-full resize-none rounded-lg border border-white/8 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition-all focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20"
+                  name="description"
+                  placeholder="Add some details…"
+                  maxLength={300}
+                  value={task.description}
+                  onChange={handleChange}
+                />
+              </div>
+
+              {/* Tags + Priority */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium uppercase tracking-wider text-slate-400">
+                    Tags
+                  </label>
+                  <input
+                    className="block w-full rounded-lg border border-white/8 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition-all focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20"
+                    type="text"
+                    name="tags"
+                    value={tagsValue}
+                    onChange={handleChange}
+                  />
+                  <p className="text-[10px] text-slate-600">Comma separated</p>
+                </div>
+
+                {/* Priority select with live color preview */}
+                <div className="space-y-1.5">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <label className="text-xs font-medium uppercase tracking-wider text-slate-400">
+                      Priority <span className="text-red-400">*</span>
+                    </label>
+                    {/* Live badge preview */}
+                    {task.priority && (
+                      <PriorityBadge priority={task.priority} size="sm" />
+                    )}
+                  </div>
+                  <select
+                    className={`block w-full cursor-pointer rounded-lg border bg-white/5 px-3.5 py-2.5 text-sm outline-none transition-all
+                      ${task.priority
+                        ? `${priorityConfig.selectText} border-white/15 focus:border-white/30`
+                        : 'text-slate-500 border-white/8 focus:border-amber-400/50'
+                      }`}
+                    name="priority"
+                    required
+                    value={task.priority}
+                    onChange={handleChange}
+                  >
+                    <option value="" className="bg-[#191D26] text-slate-400">
+                      Select priority
+                    </option>
+                    {Object.entries(PRIORITY_CONFIG).map(([key, cfg]) => (
+                      <option
+                        key={key}
+                        value={key}
+                        className="bg-[#191D26]"
+                        style={{ color: key === 'High' ? '#f87171' : key === 'Medium' ? '#fbbf24' : '#34d399' }}
+                      >
+                        {cfg.icon}  {cfg.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Due date */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium uppercase tracking-wider text-slate-400">
+                  Due Date
+                </label>
+                <input
+                  className="block w-full rounded-lg border border-white/8 bg-white/5 px-3.5 py-2.5 text-sm text-slate-300 outline-none transition-all [color-scheme:dark] focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20"
+                  type="date"
+                  name="dueDate"
+                  value={task.dueDate}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div
+              className={`flex flex-col-reverse gap-3 border-t px-4 py-4 transition-colors duration-300 sm:flex-row sm:items-center sm:justify-end sm:px-6
+                ${task.priority ? `border-t ${priorityConfig.border.replace('border-l-', 'border-t-')}/30` : 'border-white/8'}`}
             >
-              <option value="">Select Priority</option>
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-            </select>
-          </div>
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-full rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-400 transition-colors hover:border-red-600 hover:text-red-400 sm:w-auto"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="w-full rounded-lg bg-cyan-950 px-5 py-2 text-sm font-semibold text-white transition hover:bg-cyan-300 hover:text-black active:scale-95 sm:w-auto"
+              >
+                {isAdd ? 'Create Task' : 'Save Changes'}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-      
-      <div className="mt-10 flex justify-center lg:mt-12 gap-3">
-        <button
-          type="submit"
-          className="rounded bg-blue-600 px-4 py-2 text-white transition-all hover:opacity-80"
-        >
-          {isAdd ? 'Create new Task' : 'Save Changes'}
-        </button>
-        
-      </div>
-    </form>
     </>
-  )
-}
+  );
+};
 
-export default AddTaskModal
+export default AddTaskModal;
