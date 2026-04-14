@@ -6,15 +6,15 @@ import TaskBoard from './Components/TaskBoard'
 
 const App = () => {
   return (
-    <>
-     <Header/>
-     <div className='flex flex-col justify-center items-center'>
-      <HeroSection/>
-     <TaskBoard/>
-     </div>
-     <Footer/>
-    </>
-  )
+    <div className="min-h-screen w-full overflow-x-hidden">
+      <Header />
+      <main className="flex flex-col justify-center items-center overflow-hidden">
+        <HeroSection />
+        <TaskBoard />
+      </main>
+      <Footer />
+    </div>
+  );
 }
 
 export default App

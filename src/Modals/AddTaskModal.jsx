@@ -85,7 +85,7 @@ const AddTaskModal = ({ onSave, taskToUpdate, onClose }) => {
                   Title <span className="text-red-400">*</span>
                 </label>
                 <input
-                  className="block w-full rounded-lg border border-white/8 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition-all focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20"
+                  className="block w-full rounded-lg border border-white/8 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition-all focus:border-sky-400/50 focus:ring-1 focus:ring-sky-400/20"
                   type="text"
                   name="title"
                   placeholder="What needs to be done?"
@@ -106,7 +106,7 @@ const AddTaskModal = ({ onSave, taskToUpdate, onClose }) => {
                   </span>
                 </div>
                 <textarea
-                  className="block min-h-[90px] w-full resize-none rounded-lg border border-white/8 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition-all focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20"
+                  className="block min-h-[90px] w-full resize-none rounded-lg border border-white/8 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition-all focus:border-sky-400/50 focus:ring-1 focus:ring-sky-400/20"
                   name="description"
                   placeholder="Add some details…"
                   maxLength={300}
@@ -122,7 +122,7 @@ const AddTaskModal = ({ onSave, taskToUpdate, onClose }) => {
                     Tags
                   </label>
                   <input
-                    className="block w-full rounded-lg border border-white/8 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition-all focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20"
+                    className="block w-full rounded-lg border border-white/8 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition-all focus:border-sky-400/50 focus:ring-1 focus:ring-sky-400/20"
                     type="text"
                     name="tags"
                     value={tagsValue}
@@ -146,7 +146,7 @@ const AddTaskModal = ({ onSave, taskToUpdate, onClose }) => {
                     className={`block w-full cursor-pointer rounded-lg border bg-white/5 px-3.5 py-2.5 text-sm outline-none transition-all
                       ${task.priority
                         ? `${priorityConfig.selectText} border-white/15 focus:border-white/30`
-                        : 'text-slate-500 border-white/8 focus:border-amber-400/50'
+                        : 'text-slate-500 border-white/8 focus:border-sky-400/50'
                       }`}
                     name="priority"
                     required
@@ -161,7 +161,7 @@ const AddTaskModal = ({ onSave, taskToUpdate, onClose }) => {
                         key={key}
                         value={key}
                         className="bg-[#191D26]"
-                        style={{ color: key === 'High' ? '#f87171' : key === 'Medium' ? '#fbbf24' : '#34d399' }}
+                        style={{ color: key === 'High' ? '#f87171' : key === 'Medium' ? '#38bdf8' : '#34d399' }}
                       >
                         {cfg.icon}  {cfg.label}
                       </option>
@@ -176,7 +176,7 @@ const AddTaskModal = ({ onSave, taskToUpdate, onClose }) => {
                   Due Date
                 </label>
                 <input
-                  className="block w-full rounded-lg border border-white/8 bg-white/5 px-3.5 py-2.5 text-sm text-slate-300 outline-none transition-all [color-scheme:dark] focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20"
+                  className="block w-full rounded-lg border border-white/8 bg-white/5 px-3.5 py-2.5 text-sm text-slate-300 outline-none transition-all [color-scheme:dark] focus:border-sky-400/50 focus:ring-1 focus:ring-sky-400/20"
                   type="date"
                   name="dueDate"
                   value={task.dueDate}

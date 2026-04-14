@@ -14,9 +14,9 @@ const PriorityBadge = ({ priority, size = 'md' }) => {
   const config = getPriority(priority);
 
   const sizeClasses = {
-    sm: 'px-2 py-0.5 text-[10px] gap-1',
-    md: 'px-2.5 py-1 text-xs gap-1.5',
-    lg: 'px-3 py-1.5 text-sm gap-2',
+    sm: 'gap-1.5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em]',
+    md: 'gap-1.5 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em]',
+    lg: 'gap-2 px-3.5 py-2 text-xs font-semibold uppercase tracking-[0.18em]',
   };
 
   const dotSize = {
@@ -27,7 +27,7 @@ const PriorityBadge = ({ priority, size = 'md' }) => {
 
   return (
     <span
-      className={`inline-flex items-center rounded-full font-medium
+      className={`inline-flex items-center rounded-full
         ${config.badge} ${sizeClasses[size]}`}
     >
       <span className={`rounded-full flex-shrink-0 ${config.dot} ${dotSize[size]}`} />
