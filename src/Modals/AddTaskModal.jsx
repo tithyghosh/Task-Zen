@@ -21,7 +21,11 @@ const AddTaskModal = ({ onSave, taskToUpdate, onClose }) => {
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    document.body.classList.add('modal-open');
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.classList.remove('modal-open');
+    };
   }, [onClose]);
 
   const handleChange = (e) => {
@@ -41,29 +45,29 @@ const AddTaskModal = ({ onSave, taskToUpdate, onClose }) => {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
+        className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="fixed inset-0 z-50 overflow-y-auto px-4 py-4 sm:px-6 sm:py-8">
-        <div className="flex min-h-full items-end justify-center sm:items-center">
+      <div className="fixed inset-0 z-[70] overflow-y-auto px-3 pb-6 pt-20 sm:px-6 sm:pb-8 sm:pt-24">
+        <div className="flex min-h-full items-start justify-center">
           <form
             onSubmit={(e) => {
               e.preventDefault();
               onSave(task, isAdd);
             }}
-            className="flex max-h-[calc(100dvh-2rem)] w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#191D26] shadow-2xl sm:max-h-[calc(100dvh-4rem)]"
+            className="flex max-h-[calc(100dvh-6rem)] w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#191D26] shadow-2xl sm:max-h-[calc(100dvh-7rem)]"
             role="dialog"
             aria-modal="true"
           >
             {/* Header */}
-            <div className="flex items-start justify-between gap-4 border-b border-white/8 px-4 py-4 sm:px-6 sm:py-5">
+            <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-white/8 bg-[#191D26] px-4 py-4 sm:px-6 sm:py-5">
               <div className="min-w-0">
                 <h2 className="text-base font-bold text-white sm:text-lg">
                   {isAdd ? '✦ New Task' : 'Edit Task'}
                 </h2>
-                <p className="mt-0.5 text-xs text-slate-500">
+                <p className="mt-0.5 text-xs text-slate-300">
                   {isAdd ? 'Fill in the details below' : 'Update your task'}
                 </p>
               </div>

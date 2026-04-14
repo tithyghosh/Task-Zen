@@ -21,7 +21,11 @@ const FeatureOverviewModal = ({ onClose, tasks = [] }) => {
   useEffect(() => {
     const handleKeyDown = (e) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    document.body.classList.add('modal-open');
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.classList.remove('modal-open');
+    };
   }, [onClose]);
 
   const summary = useMemo(() => {

@@ -43,3 +43,8 @@ body {
   background: rgba(56, 189, 248, 0.25);
   color: #e0f2fe;
 }
+
+/* Dim navbar when a modal is open */
+body.modal-open #main-nav {
+  opacity: 0.25;
+}
